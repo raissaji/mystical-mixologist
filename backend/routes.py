@@ -87,6 +87,6 @@ def chat():
       And your elixir shall brighten the rest of your day!'''
 
   else:
-      response = "Bye bitch!"
+      response = "Bye!!"
 
   return jsonify({"response": response, "state": state})
