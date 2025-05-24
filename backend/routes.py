@@ -16,12 +16,13 @@ def get_drinks_json():
   return response_json
 
 def get_ingredients(response_json, drink):
-   ingredients = list()
-   for d in response_json['data']:
-      if d.get("name", "").lower() == drink.lower():
-         for i in d.get("ingredients"):
-            ingredients.append(i['name'])
-      return ', '.join(ingredients)
+    ingredients = list()
+    for d in response_json['data']:
+       if d.get("name", "").lower() == drink.lower():
+          for i in d.get("ingredients"):
+             ingredients.append(i.get("name", ""))
+             
+          return ', '.join(ingredients)
 
 def get_instructions(response_json, drink):
    for d in response_json['data']:
@@ -47,12 +48,11 @@ def chat():
       state["step"] = 1
 
   elif step == 1:
-      name = user_input
+      name = user_input.capitalize()
       state["name"] = name
       state["step"] = 2
 
       drink_data = get_drinks_json()
-      # print(response_json)
 
       all_drinks = list()
       for i in drink_data['data']:
@@ -61,32 +61,39 @@ def chat():
 
       state["drink_data"] = drink_data
 
-      response = f'''Ah, greetings to you, noble soul, {name} the bold!
-      I’m Mike the Mixer, with potions of old.
-      From goblets and glasses, enchantments shall flow, 
-      With these mighty elixirs to soften your woe.
-      Behold my fine brews: {drinks_list}.
-      Oh so divine—each one a spell in a shimmering wine.
-      So tell me, dear traveler, don’t be so shy—
+      response = f'''<i>poof</i><br><br>
+      Ah, greetings to you, noble soul, {name} the bold!<br>
+      I’m Mike the Mixer, with potions of old.<br>
+      From goblets and glasses, enchantments shall flow,<br> 
+      With these mighty elixirs to soften your woe.<br>
+      Behold my fine brews: <br><br><b>{drinks_list}</b>.<br><br>
+      Oh so divine, each one a spell in a shimmering wine.<br>
+      So tell me, dear traveler, don’t be so shy—<br>
       Which magical mixture has caught your keen eye?'''
 
   elif step == 2:
-      drink = user_input
+      drink = user_input.title()
       state["drink"] = drink
       state["step"] = 3
 
       ingredients = get_ingredients(state["drink_data"], drink)
       instructions = get_instructions(state["drink_data"], drink)
 
-      response = f'''Ahh, to brew the {drink}, a most curious feat,  
-      You’ll need these ingredients—a magical treat: {ingredients}.  
-      Now heed these instructions, both clever and wise,  
-      To summon a potion that dazzles the eyes:  
-      {instructions}  
-      So stir it with care, let no step go astray,  
+      response = f'''Ahh, to brew the {drink}, a most curious feat,<br>  
+      You’ll need these ingredients—a magical treat: <br><br><b>{ingredients}.</b><br><br>
+      Now heed these instructions, both clever and wise,<br>  
+      To summon a potion that dazzles the eyes:<br><br>  
+      <b>{instructions}</b><br><br>  
+      So stir it with care, let no step go astray,<br>  
       And your elixir shall brighten the rest of your day!'''
 
+  elif step == 3:
+     state["step"] = 4
+
+     response = '''Oh, where did the time go! I muust bid thee farewell.<br><br>
+      <i>poof</i>'''
+
   else:
-      response = "Bye!!"
+      response = "<i>Mike has disappeared...</i>"
 
   return jsonify({"response": response, "state": state})
