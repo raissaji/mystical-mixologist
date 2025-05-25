@@ -37,7 +37,7 @@ def index():
 def chat():
   data = request.get_json()
   user_input = data.get("message", "")
-  state = data.get("state", {"step": 0, "name": None, "drink_data": None, "drink": None})
+  state = data.get("state", {"step": 0, "name": None, "drink_data": None, "drink": None, "drinks_list": None})
 
   step = state.get("step", 0)
   name = state.get("name", None)
@@ -56,10 +56,11 @@ def chat():
 
       all_drinks = list()
       for i in drink_data['data']:
-        all_drinks.append(i['name'])
+        all_drinks.append(i['name'].title())
         drinks_list = ', '.join(all_drinks)
 
       state["drink_data"] = drink_data
+      state["drinks_list"] = drinks_list
 
       response = f'''<i>poof</i><br><br>
       Ah, greetings to you, noble soul, {name} the bold!<br>
@@ -73,19 +74,24 @@ def chat():
 
   elif step == 2:
       drink = user_input.title()
-      state["drink"] = drink
-      state["step"] = 3
 
-      ingredients = get_ingredients(state["drink_data"], drink)
-      instructions = get_instructions(state["drink_data"], drink)
+      if drink not in state["drinks_list"]:
+         response = f'''Alas, <b>{drink}</b> is not among my enchanted brews.<br><br>
+         Might you try another drink from the spellbook? Name one from the list, dear traveler.'''
+      else:
+        state["drink"] = drink
+        state["step"] = 3
 
-      response = f'''Ahh, to brew the {drink}, a most curious feat,<br>  
-      You’ll need these ingredients—a magical treat: <br><br><b>{ingredients}.</b><br><br>
-      Now heed these instructions, both clever and wise,<br>  
-      To summon a potion that dazzles the eyes:<br><br>  
-      <b>{instructions}</b><br><br>  
-      So stir it with care, let no step go astray,<br>  
-      And your elixir shall brighten the rest of your day!'''
+        ingredients = get_ingredients(state["drink_data"], drink)
+        instructions = get_instructions(state["drink_data"], drink)
+
+        response = f'''Ahh, to brew the {drink}, a most curious feat,<br>  
+        You’ll need these ingredients—a magical treat: <br><br><b>{ingredients}.</b><br><br>
+        Now heed these instructions, both clever and wise,<br>  
+        To summon a potion that dazzles the eyes:<br><br>  
+        <b>{instructions}</b><br><br>  
+        So stir it with care, let no step go astray,<br>  
+        And your elixir shall brighten the rest of your day!'''
 
   elif step == 3:
      state["step"] = 4
