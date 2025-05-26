@@ -1,0 +1,41 @@
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fffdf7;
+  font-family: "Press Start 2P", sans-serif;
+  text-align: center;
+}
+
+#start-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 35px;
+  color: black;
+}
+
+img {
+  width: 70%;
+  margin: 25px auto;
+  display: block;
+}
+
+p {
+  max-width: 70%;
+  font-size: 15px;
+  color: #474399;
+  margin: 40px auto;
+}
+
+a {
+  color: rgb(208, 153, 229);
+  font-size: 11px;
+  cursor: pointer;
+  font-style: italic;
+  text-decoration: none;
+}
